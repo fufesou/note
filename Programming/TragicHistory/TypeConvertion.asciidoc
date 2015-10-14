@@ -1,0 +1,54 @@
+= int和float的类型转换
+陈小龙 <shuanglongchen@yeah.net>
+:lang: zh-cmn-Hans
+:doctype: article
+:icons: font
+:source-highlighter: highlightjs
+:linkcss!:
+:numbered:
+:idprefix:
+:toc: right
+:toclevels: 3
+:experimental:
+
+==
+
+今天下午花了几个小时，调试出了个“耻辱”的bug：没有强制转换float到int，导致误差累加，最后结果跑偏远了……
+
+下面给出例子，我要写一张图片，wh为图片尺寸，现在要向xy坐标中写颜色值，由于程序环境，得到的是浮点数。
+
+我最先的做法是调用getIndex_1()，可把我害惨了，找了好久才找出bug。
+
+[NOTE]
+调程序时付出的汗水(还要加泪水) >> 写程序时小心点付出的汗水。>>是远大于的数字符号。
+
+
+[source,c]
+----
+float x = 0.9323;
+float y = 1.023
+int w = 500;
+int h = 800;
+
+int getIndex_1()
+{
+    return y*w + x;
+}
+
+int getIndex_2()
+{
+    return (int)y*w + (int)x;
+}
+----
+
+好，我们把程序改成调用 getIndex_2了，回家！……等等，这样真的好吗？
+
+试试getIndex_3吧，也许这更符合你的口味呢！
+
+[source,c]
+----
+int getIndex_3()
+{
+    return (int)(y+0.5)*2 + (int)(x+0.5);
+}
+----

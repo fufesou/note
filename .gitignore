@@ -1,2 +1,13 @@
 *~
 *.swp
+
+# CMake
+MakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
+CTestTestFile.cmake
+DartConfiguration.tcl
+Testing

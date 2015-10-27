@@ -1,0 +1,75 @@
+= float的正则表达式(Qt测试)
+陈小龙 <shuanglongchen@yeah.net>
+:lang: zh-cmn-Hans
+:doctype: article
+:icons: font
+:source-highlighter: pygments
+:linkcss!:
+:numbered:
+:idprefix:
+:toc: right
+:toclevels: 3
+:experimental:
+
+== float的格式类型
+----
+. 10
+. 0.10
+. 10.10
+. .10
+. -.10
+----
+
+== 正则
+
+[source]
+--
+\\s*(-?\\d*\\.?\\d+)\\s*
+--
+
+== Qt测试代码
+
+
+[source,cpp]
+--
+#include  <QCoreApplication>
+#include  <QDebug>
+#include  <QString>
+#include  <QRegExp>
+
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    QString testStr("(-10, 50)");
+    QString testStr2("(10.0, 50)");
+    QString testStr3("(10.0, -50.0)");
+    QString testStr4("(.05, -.5)");
+    QRegExp testRegExp("\\s*\\(\\s*(-?\\d*\\.?\\d+)\\s*,\\s*(-?\\d*\\.?\\d+)\\s*\\)\\s*");
+
+    bool bMatchOK = testRegExp.exactMatch(testStr);
+    Q_ASSERT(bMatchOK);
+    qDebug() << testRegExp.cap(1) << ", " << testRegExp.cap(2);
+    bool bMatchOK2 = testRegExp.exactMatch(testStr2);
+    Q_ASSERT(bMatchOK2);
+    qDebug() << testRegExp.cap(1) << ", " << testRegExp.cap(2);
+    bool bMatchOK3 = testRegExp.exactMatch(testStr3);
+    qDebug() << testRegExp.cap(1) << ", " << testRegExp.cap(2);
+    Q_ASSERT(bMatchOK3);
+    bool bMatchOK4 = testRegExp.exactMatch(testStr4);
+    qDebug() << testRegExp.cap(1) << ", " << testRegExp.cap(2);
+    Q_ASSERT(bMatchOK4);
+
+    return a.exec();
+}
+--
+
+.输出
+[source,cpp]
+--
+"-10", "50"
+"10.0", "50"
+"10.0", "-50.0"
+".05", "-.5"
+--
